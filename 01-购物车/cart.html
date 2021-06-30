@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>cart</title>
+</head>
+<body>
+<!-- 购物车测试 实现 1.偶数行斑马纹 2.点击移除斑马纹、总价、序号随之变动 3.计算总价-->
+<div id="app" class="">
+  <div class="header">
+    <div></div>
+    <div>书籍名称</div>
+    <div>出版日期</div>
+    <div>价格</div>
+    <div>购买数量</div>
+    <div>操作</div>
+  </div>
+  <div class="border">
+    <!-- 斑马纹 :class="{zebraPattern: index%2 !== 0}" -->
+    <div v-for="(value,index) in book" class="content" v-if="value.status">
+      <div>{{ value.index + index + 1 }}</div>
+      <div>{{ value.name }}</div>
+      <div>{{ value.date }}</div>
+      <div>¥ {{ value.price }}</div>
+      <div>
+        <div>
+          <button @click="minus(index)"> - </button>
+        </div>
+        <span>{{ value.number }}</span>
+        <div>
+          <button @click="plus(index)"> + </button>
+        </div>
+      </div>
+      <div>
+        <button @click="remove(index)">移除</button>
+      </div>
+    </div>
+  </div>
+  <div class="total">
+    <div>总价：</div>
+    <div></div>
+    <div></div>
+    <span>{{ totalPrice }}</span>
+  </div>
+</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script>
+  let app = new Vue({
+    el: '#app',
+    data: {
+      book: [{
+        name: '算法导论', date: '2019-06', price: '85', number: 0, total: '', status: true, index: 0
+      }, {
+        name: '编程艺术', date: '2020-01', price: '55', number: 0, total: '', status: true, index: 0
+      }, {
+        name: '你不知道的JS', date: '2019-12', price: '100', number: 0, total: '', status: true, index: 0
+      }, {
+        name: 'JS核心技术', date: '2020-10', price: '60', number: 0, total: '', status: true, index: 0
+      }],
+      totalPrice: 0,
+    },
+    methods: {
+      minus(index) {
+        if (this.book[index].number > 0) {
+          this.book[index].number--
+        }
+        this.calculate()
+      },
+
+      plus(index) {
+        this.book[index].number++
+        this.calculate()
+      },
+      remove(index) {
+        this.book[index].status = false
+        let i = index + 1
+        for (; i < this.book.length; i++) {
+          this.book[i].index --
+          console.log(this.book[i].index)
+        }
+        this.calculate()
+      },
+
+      calculate() {
+        for (let i = 0; i < this.book.length; i++) {
+          this.book[i].total = this.book[i].number * this.book[i].price
+          if (!this.book[i].status) {
+            this.book[i].total = 0
+          }
+        }
+        this.totalPrice = this.book[0].total + this.book[1].total + this.book[2].total + this.book[3].total
+      }
+    },
+  });
+</script>
+</html>
